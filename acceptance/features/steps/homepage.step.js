@@ -3,7 +3,7 @@ const puppeteer = require('puppeteer');
 const assert = require('assert');
 
 Given("that User goes to Video Site Project's HomePage", async () => {
-    this.browser = await puppeteer.launch();
+    this.browser = await puppeteer.launch({headless: true});
     this.page = await this.browser.newPage();
 })
 
@@ -13,7 +13,8 @@ When("page is loaded", async () => {
 })
 
 Then("User can see some of videos' title like", async (titles) => {
-    const titlesInPage = await this.page.$$eval('.video.title', el => el.textContent)
+    const titlesInPage = await this.page.$$eval('.videobox .title', tt => tt.map (t => t.textContent)
+    )
     assert.ok(titlesInPage, "pages does not includes any video")
     for (const [title] of titles.rawTable) {
         assert.equal(titlesInPage.includes(title), true, `"${title}" not found`)

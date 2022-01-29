@@ -7,4 +7,4 @@ Scenario: User should see some videos on main page
     Then User can see some of videos' title like
       | Vue.js Course for Beginners [2021 Tutorial] |
       | Vue JS Crash Course                         |
-      | ue 3 - What's New? What Changed?            |
+      | Vue 3 - What's New? What Changed?            |

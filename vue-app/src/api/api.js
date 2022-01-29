@@ -1,7 +1,7 @@
 import axios from "axios"
 
-const defaultBaseUrl = process.env.DEFAULT_BASE_URL
-
+const defaultBaseUrl = "https://my-json-server.typicode.com/modanisa/bootcamp-video-db"
+console.log(defaultBaseUrl)
 const api = (baseUrl = defaultBaseUrl) =>
 ({
     getVideos: async () => {
