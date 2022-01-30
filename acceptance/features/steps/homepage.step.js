@@ -32,14 +32,10 @@ Given("that User is on Video Site Project's HomePage", async () => {
     await this.page.waitForTimeout(2000)
 })
 
-When("User clicks {string} video", async (targetVideoTtile) => {
-    const videoBoxes = await this.page.$$('.videobox')
-    const targetVideoBox = videoBoxes.find(async videoBox => {
-        const title = await videoBox.$eval("p.title", titleElement => titleElement.textContent)
-        return title === targetVideoTtile
-    })
+When("User clicks {string} video", async (targetVideoTitle) => {
+    const targetVideoBox = await (findTargetVideoByTitle.call(this, targetVideoTitle))
 
-    assert.ok(targetVideoBox, `target video '${targetVideoTtile}' not found`)
+    assert.ok(targetVideoBox, `target video '${targetVideoTitle}' not found`)
     this.id = await targetVideoBox.$eval(".info", element => element.getAttribute("data-id"))
     console.log("THIS.ID", this.id)
     const link = await targetVideoBox.$("a")
@@ -54,3 +50,29 @@ Then("User should see watch url correctly", async () => {
     await this.page.close()
     await this.browser.close()
 })
+
+When("User hovers {string} video", async targetVideoTitle => {
+    this.targetVideoBox = await (findTargetVideoByTitle.call(this, targetVideoTitle))
+    assert.ok(this.targetVideoBox, `target video '${targetVideoTitle}' not found`)
+
+    const coverImage = await this.targetVideoBox.$("img.cover")
+    await coverImage.hover()
+})
+
+Then("User should see hovered image", async() => {
+    const { src, hover } = await this.targetVideoBox
+        .$eval('img.cover', imgElement => ({
+            src: imgElement.src, 
+            hover: imgElement.getAttribute("data-hover")
+        }))
+    
+    assert.equal(src, hover)
+})
+
+async function findTargetVideoByTitle(title) {
+    const videoBoxes = await this.page.$$('.videobox')
+    return await videoBoxes.find(async videoBox => {
+        const title = await videoBox.$eval("p.title", titleElement => titleElement.textContent)
+        return title === title
+    })
+}
