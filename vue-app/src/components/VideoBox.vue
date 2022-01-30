@@ -1,12 +1,12 @@
 <template>
   <div class="videobox">
-    <router-link :to="{ name: 'watch', params: { id: video.id } }">
+    <router-link :to="{ name: 'Watch', params: { id: video.id } }">
       <img
         class="cover"
         :src="video.coverImage"
       />
     </router-link>
-    <div class="info">
+    <div class="info" :data-id="video.id">
       <div class="profile-container">
         <img class="profile" :src="video.ownerImage" />
       </div>

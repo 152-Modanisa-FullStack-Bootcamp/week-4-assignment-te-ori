@@ -26,7 +26,7 @@ Then("User can see some of videos' title like", async (titles) => {
 })
 
 Given("that User is on Video Site Project's HomePage", async () => {
-    this.browser = await puppeteer.launch({ headless: false });
+    this.browser = await puppeteer.launch({ headless: true });
     this.page = await this.browser.newPage();
     await this.page.goto("http://localhost:8080")
     await this.page.waitForTimeout(2000)
@@ -39,8 +39,9 @@ When("User clicks {string} video", async (targetVideoTtile) => {
         return title === targetVideoTtile
     })
 
-    assert.ok(targetVideoBox, "target video not found")
-    this.id = await targetVideoBox.getProperty("data-id")
+    assert.ok(targetVideoBox, `target video '${targetVideoTtile}' not found`)
+    this.id = await targetVideoBox.$eval(".info", element => element.getAttribute("data-id"))
+    console.log("THIS.ID", this.id)
     const link = await targetVideoBox.$("a")
     await link.click()
 })
@@ -49,4 +50,7 @@ Then("User should see watch url correctly", async () => {
     const url = await this.page.url()
 
     assert.ok(url.includes(this.id))
+
+    await this.page.close()
+    await this.browser.close()
 })
