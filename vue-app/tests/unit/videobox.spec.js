@@ -1,4 +1,5 @@
 import { createLocalVue, mount, shallowMount } from "@vue/test-utils"
+import flushPromises from "flush-promises"
 import VideoBox from "@/components/VideoBox"
 import data from "./test-data"
 import VueRouter from "vue-router"
@@ -42,10 +43,10 @@ describe("VideoBox.vue", () => {
             expect(title.exists()).toBeTruthy()
         })
 
-        it("should display hover image while mouse is over", () => {
+        it("should display hover image while mouse is over", async () => {
             const coverImage = wrapper.find("img.cover")
-            coverImage.trigger('mousover')
-    
+            coverImage.trigger('mouseover')
+            await flushPromises()
             expect(coverImage.attributes("src")).toMatch(videoData.hoverImage)
         })
     })
@@ -61,7 +62,6 @@ describe("VideoBox.vue", () => {
             }
         })
         const videoBox = nonShallow.find(".videobox")
-        console.log(videoBox.html())
         const link = videoBox.find("a")
 
         expect(link.exists()).toBeTruthy()

@@ -67,6 +67,9 @@ Then("User should see hovered image", async() => {
         }))
     
     assert.equal(src, hover)
+    
+    await this.page.close()
+    await this.browser.close()
 })
 
 async function findTargetVideoByTitle(title) {

@@ -17,7 +17,6 @@ describe("Home.vue",() => {
             }
         });
 
-        console.log(wrapper.html())
         const videoBoxes = wrapper.findAll("video-box-stub")
 
         expect(videoBoxes).toHaveLength(data.length)

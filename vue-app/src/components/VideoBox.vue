@@ -3,7 +3,10 @@
     <router-link :to="{ name: 'Watch', params: { id: video.id } }">
       <img
         class="cover"
-        :src="video.coverImage"
+        :src="coverImage"
+        :data-hover="video.hoverImage"
+        @mouseover="onMouseOverCoverImage"
+        @mouseout="onMouseOutCoverImage"
       />
     </router-link>
     <div class="info" :data-id="video.id">
@@ -26,6 +29,19 @@ export default {
     video: {
       type: Object,
       isRequired: true,
+    },
+  },
+  data() {
+    return {
+      coverImage: this.video.coverImage,
+    };
+  },
+  methods: {
+    onMouseOverCoverImage() {
+      this.coverImage = this.video.hoverImage;
+    },
+    onMouseOutCoverImage() {
+      this.coverImage = this.video.coverImage;
     },
   },
 };
