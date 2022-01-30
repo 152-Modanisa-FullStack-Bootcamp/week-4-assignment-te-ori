@@ -1,41 +1,62 @@
-import {createLocalVue, shallowMount } from "@vue/test-utils"
+import { createLocalVue, mount, shallowMount } from "@vue/test-utils"
 import VideoBox from "@/components/VideoBox"
 import data from "./test-data"
 import VueRouter from "vue-router"
 
+import router from "@/router"
+
 describe("VideoBox.vue", () => {
     const videoData = data[0];
-    let wrapper;
 
-    beforeEach(() => {
+    describe("Basic items", () => {
+        beforeEach(() => {
+            const localVue = createLocalVue();
+            localVue.use(VueRouter)
+            wrapper = shallowMount(VideoBox, {
+                localVue,
+                propsData: {
+                    video: videoData
+                }
+            })
+        })
+
+        it("should exist", () => {
+            expect(wrapper.exists()).toBeTruthy()
+        })
+
+        it("should contains", () => {
+            const videoBox = wrapper.find(".videobox")
+            const coverImage = videoBox.find("img.cover")
+            const profileImage = videoBox.find("img.profile")
+            const title = videoBox.find(".title");
+
+            expect(videoBox.exists()).toBeTruthy()
+
+            expect(coverImage.exists()).toBeTruthy()
+            expect(coverImage.attributes("src")).toMatch(videoData.coverImage)
+
+            expect(profileImage.exists()).toBeTruthy()
+            expect(profileImage.attributes("src")).toMatch(videoData.ownerImage)
+
+            expect(title.exists()).toBeTruthy()
+        })
+    })
+
+    it("should contains link to watch page", async () => {
         const localVue = createLocalVue();
         localVue.use(VueRouter)
-        wrapper = shallowMount(VideoBox, {
+        const nonShallow = mount(VideoBox, {
             localVue,
+            router,
             propsData: {
                 video: videoData
             }
         })
-    })
+        const videoBox = nonShallow.find(".videobox")
+        console.log(videoBox.html())
+        const link = videoBox.find("a")
 
-    it("should exist", () => {
-        expect(wrapper.exists()).toBeTruthy()
-    })
-
-    it("should contains", () => {
-        const videoBox = wrapper.find(".videobox")
-        const coverImage = videoBox.find("img.cover")
-        const profileImage = videoBox.find("img.profile")
-        const title = videoBox.find(".title");
-
-        expect(videoBox.exists()).toBeTruthy()
-
-        expect(coverImage.exists()).toBeTruthy()
-        expect(coverImage.attributes("src")).toMatch(videoData.coverImage)
-
-        expect(profileImage.exists()).toBeTruthy()
-        expect(profileImage.attributes("src")).toMatch(videoData.ownerImage)
-
-        expect(title.exists()).toBeTruthy()
+        expect(link.exists()).toBeTruthy()
+        expect(link.attributes("href")).toMatch(`watch?id=${videoData.id}`)
     })
 })
