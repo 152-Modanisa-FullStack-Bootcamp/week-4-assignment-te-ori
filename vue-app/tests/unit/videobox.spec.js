@@ -9,6 +9,7 @@ describe("VideoBox.vue", () => {
     const videoData = data[0];
 
     describe("Basic items", () => {
+        let wrapper;
         beforeEach(() => {
             const localVue = createLocalVue();
             localVue.use(VueRouter)
@@ -40,6 +41,13 @@ describe("VideoBox.vue", () => {
 
             expect(title.exists()).toBeTruthy()
         })
+
+        it("should display hover image while mouse is over", () => {
+            const coverImage = wrapper.find("img.cover")
+            coverImage.trigger('mousover')
+    
+            expect(coverImage.attributes("src")).toMatch(videoData.hoverImage)
+        })
     })
 
     it("should contains link to watch page", async () => {
@@ -59,4 +67,6 @@ describe("VideoBox.vue", () => {
         expect(link.exists()).toBeTruthy()
         expect(link.attributes("href")).toMatch(`watch?id=${videoData.id}`)
     })
+
+
 })
